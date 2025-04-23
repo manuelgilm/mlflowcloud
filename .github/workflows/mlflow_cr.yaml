@@ -2,6 +2,8 @@ name: Create and publish a Docker image.
 env: 
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  ACTIONS_ID_TOKEN_REQUEST_URL: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_URL }}
+  
 on: 
   push:
     branches: 
