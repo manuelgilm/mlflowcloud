@@ -68,4 +68,4 @@ jobs:
           app-name: 'gilsamamlflow'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_6df782e285cf4bb0b5d3dcafc7883458 }}
-          images: 'ghcr.io//manuelgilm/mlflowcloud:${{ github.sha }}'
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
