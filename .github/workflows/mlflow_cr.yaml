@@ -70,9 +70,10 @@ jobs:
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_6df782e285cf4bb0b5d3dcafc7883458 }}
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
-      - name: Output Web App URL
+      - name: Printing information
         run: |
           echo "Web App URL: ${{ steps.deploy-to-webapp.outputs.webapp-url }}"
+          echo "AzureAppService Publish profile: ${{ secrets.AzureAppService_PublishProfile_6df782e285cf4bb0b5d3dcafc7883458 }}"
         id: webapp-url
         env:
           AZURE_WEBAPP_URL: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
