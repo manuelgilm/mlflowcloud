@@ -61,6 +61,14 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+      - name: update Azure Web App settings
+        uses: azure/appservice-settings@v1
+        with:
+          app-name: 'gilsamamlflow'
+          # slot-name: 'staging'  # Optional and needed only if the settings have to be configured on the specific deployment slot
+          app-settings-json: '${{ secrets.MLFLOWCLOUD_APPSETTINGS }}' 
+          # connection-strings-json: '${{ secrets.CONNECTION_STRINGS }}'
+          # general-settings-json: '{"alwaysOn": "false", "webSocketsEnabled": "true"}' #'General configuration settings as Key Value pairs'
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
