@@ -65,7 +65,7 @@ jobs:
         uses: azure/appservice-settings@v1
         with:
           app-name: 'gilsamamlflow'
-          # slot-name: 'staging'  # Optional and needed only if the settings have to be configured on the specific deployment slot
+          slot-name: 'Production'  # Optional and needed only if the settings have to be configured on the specific deployment slot
           app-settings-json: '${{ secrets.MLFLOWCLOUD_APPSETTINGS }}' 
           # connection-strings-json: '${{ secrets.CONNECTION_STRINGS }}'
           # general-settings-json: '{"alwaysOn": "false", "webSocketsEnabled": "true"}' #'General configuration settings as Key Value pairs'
@@ -78,11 +78,11 @@ jobs:
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_6df782e285cf4bb0b5d3dcafc7883458 }}
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
-      - name: Printing information
-        run: |
-          echo "Web App URL: ${{ steps.deploy-to-webapp.outputs.webapp-url }}"
-          echo "AzureAppService Publish profile: ${{ secrets.AzureAppService_PublishProfile_6df782e285cf4bb0b5d3dcafc7883458 }}"
-        id: webapp-url
-        env:
-          AZURE_WEBAPP_URL: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-        shell: bash
+      # - name: Printing information
+      #   run: |
+      #     echo "Web App URL: ${{ steps.deploy-to-webapp.outputs.webapp-url }}"
+      #     echo "AzureAppService Publish profile: ${{ secrets.AzureAppService_PublishProfile_6df782e285cf4bb0b5d3dcafc7883458 }}"
+      #   id: webapp-url
+      #   env:
+      #     AZURE_WEBAPP_URL: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      #   shell: bash
