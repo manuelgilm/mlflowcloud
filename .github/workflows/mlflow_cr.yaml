@@ -218,58 +218,57 @@ jobs:
               --server-name ${{ env.AZURE_POSTGRESQL_NAME }}
             fi
 
-  # create_container_app:
-  #   needs: 
-  #     - create_acr
-  #     - create_storage
-  #     - create_postgresql
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
+  create_container_app:
+    needs: 
+      - create_resource_group
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  #     - name: Create Container App Environment
-  #       uses: azure/cli@v2
-  #       with:
-  #         azcliversion: latest
-  #         inlineScript: |
-  #           # Check if the Container App Environment already exists
-  #           existing_env=$(
-  #             az containerapp env list \
-  #             --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
-  #             --query "[?name=='${{ env.CONTAINER_APP_ENV_NAME }}'].name" -o tsv
-  #           )
-  #           if [ -n "$existing_env" ]; then
-  #             echo "Container App Environment ${{ env.CONTAINER_APP_ENV_NAME }} already exists."
-  #           else
-  #             echo "Creating Container App Environment: ${{ env.CONTAINER_APP_ENV_NAME }}"
-  #             az containerapp env create \
-  #               --name ${{ env.CONTAINER_APP_ENV_NAME }} \
-  #               --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
-  #               --location ${{ env.LOCATION }}
-  #           fi
+      - name: Create Container App Environment
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            # Check if the Container App Environment already exists
+            existing_env=$(
+              az containerapp env list \
+              --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
+              --query "[?name=='${{ env.CONTAINER_APP_ENV_NAME }}'].name" -o tsv
+            )
+            if [ -n "$existing_env" ]; then
+              echo "Container App Environment ${{ env.CONTAINER_APP_ENV_NAME }} already exists."
+            else
+              echo "Creating Container App Environment: ${{ env.CONTAINER_APP_ENV_NAME }}"
+              az containerapp env create \
+                --name ${{ env.CONTAINER_APP_ENV_NAME }} \
+                --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
+                --location ${{ env.LOCATION }}
+            fi
 
-  #     - name: Create Container App
-  #       uses: azure/cli@v2
-  #       with:
-  #         azcliversion: latest
-  #         inlineScript: |
-  #           # Get ACR credentials
-  #           ACR_USERNAME=$(az acr credential show --name ${{ env.AZURE_CONTAINER_REGISTRY_NAME }} --query "username" -o tsv)
-  #           ACR_PASSWORD=$(az acr credential show --name ${{ env.AZURE_CONTAINER_REGISTRY_NAME }} --query "passwords[0].value" -o tsv)
 
-  #           # Check if the Container App already exists
-  #           existing_app=$(
-  #             az containerapp list \
-  #             --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
-  #             --query "[?name=='${{ env.CONTAINER_APP_NAME }}'].name" -o tsv
-  #           )
-  #           if [ -n "$existing_app" ]; then
-  #             echo "Container App ${{ env.CONTAINER_APP_NAME }} already exists."
-  #           else
-  #             echo "Creating Container App: ${{ env.CONTAINER_APP_NAME }}"
-  #             az containerapp create \
-  #               --name ${{ env.CONTAINER_APP_NAME }} \
-  #               --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
-  #               --environment ${{ env.CONTAINER_APP
+      - name: Create Container App
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            # Check if the Container App already exists
+            existing_app=$(
+              az containerapp list \
+              --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
+              --query "[?name=='${{ env.CONTAINER_APP_NAME }}'].name" -o tsv
+            )
+              
+            if [ -n "$existing_app" ]; then
+              echo "Container App ${{ env.CONTAINER_APP_NAME }} already exists."
+            else
+              echo "Creating Container App: ${{ env.CONTAINER_APP_NAME }}"
+              az containerapp create \
+                --name ${{ env.CONTAINER_APP_NAME }} \
+                --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
+                --environment ${{ env.CONTAINER_APP_ENV_NAME }} \
+                --ingress external 
+                
+            fi
 
