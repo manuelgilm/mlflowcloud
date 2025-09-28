@@ -49,8 +49,9 @@ jobs:
             exists=$(az group exists --name $RESOURCE_GROUP_NAME)
             if [ "$exists" = false ]; then
               echo "Resource group $RESOURCE_GROUP_NAME does not exist. Creating..."
-              echo "Failing the workflow to avoid accidental resource creation."
-              exit 1
+              az group create --name $RESOURCE_GROUP_NAME --location $LOCATION
+            else
+              echo "Resource group $RESOURCE_GROUP_NAME already exists."
             fi
 
   create_acr:
