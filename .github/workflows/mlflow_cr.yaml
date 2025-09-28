@@ -86,8 +86,8 @@ jobs:
             az acr build \
               --image $IMAGE_NAME \
               --registry $AZURE_CONTAINER_REGISTRY_NAME \
-              --image ${{ env.IMAGE_NAME }}:${{ github.sha }} \
-              --file docker/Dockerfile
+              --image ${{ env.IMAGE_NAME }}:${{ github.sha }} ./docker 
+              
 
   create_storage:
     needs: create_resource_group
@@ -170,9 +170,9 @@ jobs:
               echo "Creating PostgreSQL server: ${{ env.AZURE_POSTGRESQL_NAME }}"
               az postgres flexible-server create \
               --name ${{ env.AZURE_POSTGRESQL_NAME }} \
-              --admin-display-name ${{ secrets.AZ_SP_CLIENT_ID }} \
+              --admin-display-name ${{ secrets.AZURE_CLIENT_ID }} \
               --admin-type ServicePrincipal \
-              --admin-object-id ${{ secrets.AZ_SP_CLIENT_ID }} \
+              --admin-object-id ${{ secrets.AZURE_CLIENT_ID }} \
               --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
               --location ${{ env.LOCATION }} \
               --sku-name Standard_B1ms \
