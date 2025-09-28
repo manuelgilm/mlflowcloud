@@ -277,7 +277,11 @@ jobs:
                 --name ${{ env.CONTAINER_APP_NAME }} \
                 --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
                 --environment ${{ env.CONTAINER_APP_ENV_NAME }} \
-                --ingress external 
+                --ingress external \
+                --registry-server ${{ env.AZURE_CONTAINER_REGISTRY_NAME }}.azurecr.io \
+                --registry-username ${{ env.AZURE_CONTAINER_REGISTRY_NAME }} \
+                --registry-password $(az acr credential show --name ${{ env.AZURE_CONTAINER_REGISTRY_NAME }} --query "passwords[0].value" -o tsv) \
+                --target-port 5000 
             fi
 
   build_and_push_image:
@@ -334,56 +338,9 @@ jobs:
               --image $FULL_IMAGE_NAME \
               --cpu 1 \
               --memory 2Gi \
-              --registry-server $ACR_LOGIN_SERVER \
-              --registry-username ${{ env.AZURE_CONTAINER_REGISTRY_NAME }} \
-              --registry-password $(az acr credential show --name ${{ env.AZURE_CONTAINER_REGISTRY_NAME }} --query "passwords[0].value" -o tsv) \
-              --target-port 5000 \
               --set-env-vars \
                 AZURE_STORAGE_CONNECTION_STRING="${{ steps.create_storage.outputs.connection_string }}" \
                 AZURE_STORAGE_ACCESS_KEY="${{ steps.create_storage.outputs.account_key }}" \
                 MLFLOW_BACKEND_STORE_URI="$MLFLOW_BACKEND_STORE_URI" \
                 MLFLOW_HOST="0.0.0.0" \
                 MLFLOW_PORT="5000"
-
-  # update_container_app:
-  #   needs: 
-  #     - build_and_push_image
-  #     - create_container_app
-  #     - create_storage
-  #     - create_postgresql
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
-
-  #     - name: Azure Login
-  #       uses: azure/login@v2
-  #       with:
-  #         creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-  #     - name: Update Container App with New Image and Environment Variables
-  #       uses: azure/cli@v2
-  #       with:
-  #         azcliversion: latest
-  #         inlineScript: |
-  #           # Get the full image name with the registry login server
-  #           ACR_LOGIN_SERVER=$(az acr show --name ${{ env.AZURE_CONTAINER_REGISTRY_NAME }} --query loginServer -o tsv)
-  #           FULL_IMAGE_NAME="$ACR_LOGIN_SERVER/${{ env.IMAGE_NAME }}:${{ github.sha }}"
-
-  #           echo "Updating Container App ${{ env.CONTAINER_APP_NAME }} with image $FULL_IMAGE_NAME"
-
-  #           az containerapp update \
-  #             --name ${{ env.CONTAINER_APP_NAME }} \
-  #             --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
-  #             --image $FULL_IMAGE_NAME \
-  #             --set-env-vars \
-  #               AZURE_STORAGE_CONNECTION_STRING="${{ steps.create_storage.outputs.connection_string }}" \
-  #               AZURE_STORAGE_ACCESS_KEY="${{ steps.create_storage.outputs.account_key }}" \
-  #               POSTGRESQL_HOST="${{ env.AZURE_POSTGRESQL_NAME }}.postgres.database.azure.com" \
-  #               POSTGRESQL_DB="${{ env.DATABASE_NAME }}" \
-  #               POSTGRESQL_USER="${{ secrets.AZ_POSTGRESQL_DB_ADMIN_USERNAME }}@${{ env.AZURE_POSTGRESQL_NAME }}" \
-  #               POSTGRESQL_PASSWORD="${{ secrets.AZ_POSTGRESQL_DB_ADMIN_PASSWORD }}" \
-  #               ARTIFACT_CONTAINER_URL="https://${{ env.STORAGE_ACCOUNT_NAME }}.blob.core.windows.net/${{ env.BLOB_CONTAINER_NAME }}"
-              
-  
-
