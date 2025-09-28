@@ -28,6 +28,10 @@ on:
       - "master"
   workflow_dispatch:
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs: 
   create_resource_group:
     runs-on: ubuntu-latest
