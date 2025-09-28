@@ -4,7 +4,7 @@ name: Create MLflow Cloud Resources
 #   IMAGE_NAME: ${{ github.repository }}
 #   ACTIONS_ID_TOKEN_REQUEST_URL: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_URL }}
 env:
-  RESOURCE_GROUP_NAME: "mlflowcloud_rg2"
+  RESOURCE_GROUP_NAME: "mlflowcloud_rg"
   STORAGE_ACCOUNT_NAME: "mlflowcloudstrg"
   BLOB_CONTAINER_NAME: "artifact-store"
   AZURE_CONTAINER_REGISTRY_NAME: "mlflowcloudacr"
@@ -298,7 +298,6 @@ jobs:
         with:
           inlineScript: |
             az acr build \
-              --image $IMAGE_NAME \
               --registry $AZURE_CONTAINER_REGISTRY_NAME \
               --image ${{ env.IMAGE_NAME }}:${{ github.sha }} ./docker 
 
