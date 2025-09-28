@@ -293,12 +293,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Log in to ACR
-        uses: azure/cli@v2
-        with:
-          inlineScript: |
-            az acr login --name ${{ env.AZURE_CONTAINER_REGISTRY_NAME }}
-
       - name: Build and Push Docker Image to ACR
         uses: azure/cli@v2
         with:
