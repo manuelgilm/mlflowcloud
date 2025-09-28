@@ -6,4 +6,4 @@ RUN apt-get update \
     && pip install azure-storage-blob 
     
 EXPOSE 5000
-CMD ["mlflow", "server", "--default-artifact-root", "wasbs://mlflow-artifact-store@gilmlflowartifactstore.blob.core.windows.net/mlflow-artifact-store"]
+CMD ["mlflow", "server", "--default-artifact-root", "wasbs://artifact-store@mlflowcloudstrg.blob.core.windows.net/artifact-store"]
