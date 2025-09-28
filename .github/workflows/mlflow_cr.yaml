@@ -32,15 +32,11 @@ jobs:
   create_resource_group:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
       - name: Azure Login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      
       - name: Check Resource Group Exists
         uses: azure/cli@v2
         with:
@@ -58,6 +54,14 @@ jobs:
     needs: create_resource_group
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Create ACR
         uses: azure/cli@v2
         with:
@@ -84,12 +88,15 @@ jobs:
               --registry $AZURE_CONTAINER_REGISTRY_NAME \
               --image ${{ env.IMAGE_NAME }}:${{ github.sha }} \
               --file docker/Dockerfile
+
   create_storage:
     needs: create_resource_group
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Create Storage Account
         uses: azure/cli@v2
@@ -141,6 +148,11 @@ jobs:
     needs: create_resource_group
     runs-on: ubuntu-latest
     steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Create a PostgreSQL Server
         uses: azure/cli@v2
         with:
@@ -225,8 +237,11 @@ jobs:
       - create_resource_group
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Create Container App Environment
         uses: azure/cli@v2
@@ -271,6 +286,5 @@ jobs:
                 --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
                 --environment ${{ env.CONTAINER_APP_ENV_NAME }} \
                 --ingress external 
-                
             fi
 
