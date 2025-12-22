@@ -1,13 +1,15 @@
 name: Build Infra for MLflow on Azure 
 
-on push:
-  branches:
-    - master
-    - feature/adding_terraform_taskk
-  paths:
-    - 'infrastructure/azure/**'
-    - '.github/workflows/azure/deploy_on_azure.yaml'
-
+on:
+  push:
+    branches:
+      - master
+      - feature/adding_terraform_taskk
+    paths:
+      - 'infrastructure/azure/**'
+      - '.github/workflows/azure/deploy_on_azure.yaml'
+  workflow_dispatch:
+  
 jobs:
   terraform:
     runs-on: ubuntu-latest 
