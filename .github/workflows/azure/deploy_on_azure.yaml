@@ -2,7 +2,7 @@ name: Build Infra for MLflow on Azure
 
 on push:
   branches:
-    - main
+    - master
     - feature/adding_terraform_taskk
   paths:
     - 'infrastructure/azure/**'
