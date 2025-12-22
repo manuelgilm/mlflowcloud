@@ -3,7 +3,7 @@ terraform {
   backend "azurerm" {
     resource_group_name  = "gilsamasstudyapitfstate"
     storage_account_name = "gilsamastfstatestg"
-    container_name       = "mlflowformldeploymenttfstate"
+    container_name       = "mlflowcloudtfstate"
     key                  = "terraform.tfstate"
   }
   required_providers {
