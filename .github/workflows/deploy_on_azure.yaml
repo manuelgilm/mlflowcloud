@@ -6,7 +6,8 @@ on:
       - master
       - feature/adding_terraform_taskk
     paths:
-      - '.github/workflows/azure/deploy_on_azure.yaml'
+      - '.github/workflows/deploy_on_azure.yaml'
+      - 'azure/**'
   workflow_dispatch:
 
 jobs:
