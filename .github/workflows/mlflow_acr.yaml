@@ -8,7 +8,6 @@ on:
       - completed
     branches:
       - "master"
-      - "feature/adding_terraform_taskk"
   push:
     branches: 
       - "main"
