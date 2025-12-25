@@ -55,7 +55,12 @@ jobs:
           TF_VAR_postgresql_admin_username: ${{ secrets.POSTGRESQL_ADMIN_USERNAME }}
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
-
+          TF_VAR_azure_analytics_ws_name: ${{ vars.AZURE_ANALYTICS_WS_NAME }}
+          TF_VAR_azure_container_app_env_name: ${{ vars.AZURE_CONTAINER_APP_ENV_NAME }}
+          TF_VAR_azure_container_app_name: ${{ vars.AZURE_CONTAINER_APP_NAME }}
+          TF_VAR_azure_storage_account_name: ${{ vars.AZURE_STORAGE_ACCOUNT_NAME }}
+          TF_VAR_azure_artifacts_container_name: ${{ vars.AZURE_ARTIFACTS_CONTAINER_NAME }}
+          
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master'
         working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
@@ -67,3 +72,8 @@ jobs:
           TF_VAR_postgresql_admin_username: ${{ secrets.POSTGRESQL_ADMIN_USERNAME }}
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}          
           TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
+          TF_VAR_azure_analytics_ws_name: ${{ vars.AZURE_ANALYTICS_WS_NAME }}
+          TF_VAR_azure_container_app_env_name: ${{ vars.AZURE_CONTAINER_APP_ENV_NAME }}
+          TF_VAR_azure_container_app_name: ${{ vars.AZURE_CONTAINER_APP_NAME }}
+          TF_VAR_azure_storage_account_name: ${{ vars.AZURE_STORAGE_ACCOUNT_NAME }}
+          TF_VAR_azure_artifacts_container_name: ${{ vars.AZURE_ARTIFACTS_CONTAINER_NAME }}
