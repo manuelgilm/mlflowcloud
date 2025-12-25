@@ -12,7 +12,7 @@ variable "acr_name" {
   description = "Name for the Azure Container Registry"
   type        = string
 }
-variable "analytics_ws_name" {
+variable "azure_analytics_ws_name" {
   description = "Analytics Workspace for the Container APP"
   type        = string
 }
@@ -26,12 +26,12 @@ variable "azure_container_app_name" {
   type        = string
 }
 
-variable "storage_account_name" {
+variable "azure_storage_account_name" {
   description = "Storage Account Name This will be used for the Artifact Store"
   type        = string
 }
 
-variable "artifacts_container_name" {
+variable "azure_artifacts_container_name" {
   description = "Container needed for the artifact store"
   type        = string
 }

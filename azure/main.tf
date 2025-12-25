@@ -91,7 +91,7 @@ resource "azurerm_log_analytics_workspace" "res-4" {
   internet_ingestion_enabled              = true
   internet_query_enabled                  = true
   location                                = var.location
-  name                                    = var.analytics_ws_name
+  name                                    = var.azure_analytics_ws_name
   resource_group_name                     = azurerm_resource_group.res-0.name
   retention_in_days                       = 30
   sku                                     = "PerGB2018"
@@ -114,7 +114,7 @@ resource "azurerm_storage_account" "res-5" {
   local_user_enabled                = true
   location                          = var.location
   min_tls_version                   = "TLS1_2"
-  name                              = var.storage_account_name
+  name                              = var.azure_storage_account_name
   nfsv3_enabled                     = false
   public_network_access_enabled     = true
   queue_encryption_key_type         = "Service"
@@ -146,6 +146,6 @@ resource "azurerm_storage_account" "res-5" {
 resource "azurerm_storage_container" "res-6" {
   container_access_type = "private"
   metadata              = {}
-  name                  = var.artifacts_container_name
+  name                  = var.azure_artifacts_container_name
   storage_account_name  = azurerm_storage_account.res-5.name
 }
