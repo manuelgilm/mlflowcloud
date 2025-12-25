@@ -66,4 +66,4 @@ jobs:
           TF_VAR_postgresql_admin_password: ${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}
           TF_VAR_postgresql_admin_username: ${{ secrets.POSTGRESQL_ADMIN_USERNAME }}
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}          
-          TF_VAR_acr_name: ${{ env.AZURE_ACR_NAME }}
+          TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
