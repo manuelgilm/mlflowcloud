@@ -1,4 +1,4 @@
-name: Build Infra for MLflow on Azure 
+name: Build Infra for MLflow on Azure
 
 on:
   push:
@@ -24,11 +24,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      # - name: Azure CLI Login
-      #   uses: azure/login@v2
-      #   with:
-      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -56,6 +51,10 @@ jobs:
         env:
           TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
           TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
+          TF_VAR_postgresql_admin_password: ${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}
+          TF_VAR_postgresql_admin_username: ${{ secrets.POSTGRESQL_ADMIN_USERNAME }}
+          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master'
@@ -64,3 +63,7 @@ jobs:
         env:
           TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
           TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
+          TF_VAR_postgresql_admin_password: ${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}
+          TF_VAR_postgresql_admin_username: ${{ secrets.POSTGRESQL_ADMIN_USERNAME }}
+          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}          
+          TF_VAR_acr_name: ${{ env.AZURE_ACR_NAME }}
