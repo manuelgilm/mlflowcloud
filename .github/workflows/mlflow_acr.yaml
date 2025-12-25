@@ -6,6 +6,9 @@ on:
     workflows: ["Build Infra for MLflow on Azure"]
     types:
       - completed
+    branches:
+      - "master"
+      - "feature/adding_terraform_taskk"
   push:
     branches: 
       - "main"
