@@ -1,4 +1,4 @@
-name: Build Infra for MLflow on Azure 
+name: Build Infra for MLflow on Azure
 
 on:
   push:
@@ -20,7 +20,6 @@ jobs:
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       TF_VERSION: 1.5.7
       TERRAFORM_WORKING_DIR: "azure"
-      AZURE_ACR_NAME: "mlflowcloudacr"
 
     steps:
       - name: Checkout repository
@@ -55,7 +54,7 @@ jobs:
           TF_VAR_postgresql_admin_password: ${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}
           TF_VAR_postgresql_admin_username: ${{ secrets.POSTGRESQL_ADMIN_USERNAME }}
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-          TF_VAR_acr_name: ${{ env.AZURE_ACR_NAME }}
+          TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master'
