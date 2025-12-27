@@ -39,50 +39,6 @@ resource "azurerm_container_app_environment" "res-2" {
   }
 }
 
-resource "azurerm_container_app" "res-3" {
-  container_app_environment_id = azurerm_container_app_environment.res-2.id
-  name                         = var.azure_container_app_name
-  resource_group_name          = azurerm_resource_group.res-0.name
-  revision_mode                = "Single"
-  tags                         = {}
-  workload_profile_name        = "Consumption"
-  ingress {
-    allow_insecure_connections = false
-    external_enabled           = true
-    target_port                = 5000
-    transport                  = "auto"
-    traffic_weight {
-      latest_revision = true
-      percentage      = 100
-    }
-  }
-  template {
-    max_replicas = 10
-    min_replicas = 0
-    container {
-      cpu    = 1
-      image  = "placeholder"
-      memory = "2Gi"
-      name   = "mlflow"
-      env {
-        name  = "MLFLOW_HOST"
-        value = "0.0.0.0"
-      }
-      env {
-        name  = "MLFLOW_PORT"
-        value = "5000"
-      }
-      env {
-        name  = "MLFLOW_SERVER_ALLOWED_HOSTS"
-        value = "*"
-      }
-    }
-
-
-  }
-
-}
-
 resource "azurerm_log_analytics_workspace" "res-4" {
   allow_resource_only_permissions         = true
   cmk_for_query_forced                    = false
