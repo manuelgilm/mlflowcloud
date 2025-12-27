@@ -4,7 +4,7 @@ terraform {
     resource_group_name  = "gilsamasstudyapitfstate"
     storage_account_name = "gilsamastfstatestg"
     container_name       = "mlflowcloudtfstate"
-    key                  = "terraform.tfstate"
+    key                  = "terraform.core.tfstate"
   }
   required_providers {
     azurerm = {
