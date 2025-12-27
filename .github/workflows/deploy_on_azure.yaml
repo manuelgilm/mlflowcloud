@@ -96,7 +96,8 @@ jobs:
           inlineScript: |
             az acr build \
               --registry ${{ vars.AZURE_ACR_NAME}} \
-              --image ${{ env.IMAGE_NAME }}:${{ github.sha }} ./docker 
+              --build-arg ARTIFACT_ROOT="wasbs://$${{ vars.AZURE_ARTIFACTS_CONTAINER_NAME }}@${{ vars.AZURE_STORAGE_ACCOUNT_NAME }}.blob.core.windows.net/artifact-store" \
+              --image ${{ env.IMAGE_NAME }}:${{ github.sha }} ./azure/image/
 
       - name: Set output image name
         id: set-output
