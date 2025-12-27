@@ -1,5 +1,6 @@
 name: Build Infra for MLflow on Azure
-
+env:
+  IMAGE_NAME: "gilsamas/mlflowcloud"
 on:
   push:
     branches:
@@ -11,15 +12,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  terraform:
+  terraform_core:
     runs-on: ubuntu-latest 
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      TF_VERSION: 1.5.7
-      TERRAFORM_WORKING_DIR: "azure"
+      # TF_VERSION: 1.5.7
+      TERRAFORM_WORKING_DIR: "azure/terraform/core"
 
     steps:
       - name: Checkout repository
@@ -57,7 +58,6 @@ jobs:
           TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
           TF_VAR_azure_analytics_ws_name: ${{ vars.AZURE_ANALYTICS_WS_NAME }}
           TF_VAR_azure_container_app_env_name: ${{ vars.AZURE_CONTAINER_APP_ENV_NAME }}
-          TF_VAR_azure_container_app_name: ${{ vars.AZURE_CONTAINER_APP_NAME }}
           TF_VAR_azure_storage_account_name: ${{ vars.AZURE_STORAGE_ACCOUNT_NAME }}
           TF_VAR_azure_artifacts_container_name: ${{ vars.AZURE_ARTIFACTS_CONTAINER_NAME }}
           
@@ -74,6 +74,100 @@ jobs:
           TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
           TF_VAR_azure_analytics_ws_name: ${{ vars.AZURE_ANALYTICS_WS_NAME }}
           TF_VAR_azure_container_app_env_name: ${{ vars.AZURE_CONTAINER_APP_ENV_NAME }}
-          TF_VAR_azure_container_app_name: ${{ vars.AZURE_CONTAINER_APP_NAME }}
           TF_VAR_azure_storage_account_name: ${{ vars.AZURE_STORAGE_ACCOUNT_NAME }}
           TF_VAR_azure_artifacts_container_name: ${{ vars.AZURE_ARTIFACTS_CONTAINER_NAME }}
+  
+  build_and_push_image:
+    needs: 
+      - terraform_core
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
+
+      - name: Build and Push Docker Image to ACR
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az acr build \
+              --registry ${{ vars.AZURE_ACR_NAME}} \
+              --image ${{ env.IMAGE_NAME }}:${{ github.sha }} ./docker 
+
+      - name: Set output image name
+        id: set-output
+        run: echo "::set-output name=image::${{ env.IMAGE_NAME }}:${{ github.sha }}"
+
+  deploy_container_app:
+    needs: 
+      - terraform_core
+      - build_and_push_image
+    runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      TERRAFORM_WORKING_DIR: "azure/terraform/app"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Format
+        working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
+        run: terraform init
+        env:
+          TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
+          TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
+
+      - name: Terraform Validate
+        working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
+        run: terraform validate
+          
+      - name: Terraform Plan
+        working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
+        run: terraform plan
+        env:
+          TF_VAR_image_name: ${{ steps.build_and_push_image.outputs.image }}
+          # TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
+          # TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
+          # TF_VAR_postgresql_admin_password: ${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}
+          # TF_VAR_postgresql_admin_username: ${{ secrets.POSTGRESQL_ADMIN_USERNAME }}
+          # TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          # TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
+          # TF_VAR_azure_analytics_ws_name: ${{ vars.AZURE_ANALYTICS_WS_NAME }}
+          # TF_VAR_azure_container_app_env_name: ${{ vars.AZURE_CONTAINER_APP_ENV_NAME }}
+          # TF_VAR_azure_storage_account_name: ${{ vars.AZURE_STORAGE_ACCOUNT_NAME }}
+          # TF_VAR_azure_artifacts_container_name: ${{ vars.AZURE_ARTIFACTS_CONTAINER_NAME }}
+          
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/master'
+        working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
+        run: terraform apply -auto-approve
+        env:
+          TF_VAR_image_name: ${{ steps.build_and_push_image.outputs.image }}
+          # TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
+          # TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
+          # TF_VAR_postgresql_admin_password: ${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}
+          # TF_VAR_postgresql_admin_username: ${{ secrets.POSTGRESQL_ADMIN_USERNAME }}
+          # TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}          
+          # TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
+          # TF_VAR_azure_analytics_ws_name: ${{ vars.AZURE_ANALYTICS_WS_NAME }}
+          # TF_VAR_azure_container_app_env_name: ${{ vars.AZURE_CONTAINER_APP_ENV_NAME }}
+          # TF_VAR_azure_storage_account_name: ${{ vars.AZURE_STORAGE_ACCOUNT_NAME }}
+          # TF_VAR_azure_artifacts_container_name: ${{ vars.AZURE_ARTIFACTS_CONTAINER_NAME }}
