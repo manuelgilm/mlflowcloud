@@ -31,7 +31,7 @@ resource "azurerm_container_app" "res-3" {
     min_replicas = 0
     container {
       cpu    = 1
-      image  = data.terraform_remote_state.core.outputs.acr_login_server / var.image_name
+      image  = "${data.terraform_remote_state.core.outputs.acr_login_server}/${var.image_name}"
       memory = "2Gi"
       name   = "mlflow"
       env {
@@ -55,8 +55,5 @@ resource "azurerm_container_app" "res-3" {
         value = data.terraform_remote_state.core.outputs.primary_access_key
       }
     }
-
-
   }
-
 }
