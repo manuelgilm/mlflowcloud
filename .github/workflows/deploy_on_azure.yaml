@@ -145,6 +145,7 @@ jobs:
         run: terraform plan
         env:
           TF_VAR_image_name: ${{ steps.build_and_push_image.outputs.image }}
+          TF_VAR_azure_container_app_name: ${{ vars.AZURE_CONTAINER_APP_NAME }}
           # TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
           # TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
           # TF_VAR_postgresql_admin_password: ${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}
@@ -162,6 +163,7 @@ jobs:
         run: terraform apply -auto-approve
         env:
           TF_VAR_image_name: ${{ steps.build_and_push_image.outputs.image }}
+          TF_VAR_azure_container_app_name: ${{ vars.AZURE_CONTAINER_APP_NAME }}
           # TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
           # TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
           # TF_VAR_postgresql_admin_password: ${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}
