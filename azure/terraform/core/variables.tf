@@ -17,15 +17,6 @@ variable "azure_analytics_ws_name" {
   type        = string
 }
 
-variable "azure_container_app_env_name" {
-  description = "Name for the Azure Container APP environment"
-  type        = string
-}
-variable "azure_container_app_name" {
-  description = "Name for the Azure Container APP environment"
-  type        = string
-}
-
 variable "azure_storage_account_name" {
   description = "Storage Account Name This will be used for the Artifact Store"
   type        = string
