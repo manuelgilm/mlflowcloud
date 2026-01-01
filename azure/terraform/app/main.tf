@@ -16,6 +16,12 @@ resource "azurerm_container_app" "res-3" {
   revision_mode                = "Single"
   tags                         = {}
   workload_profile_name        = "Consumption"
+  registry {
+    identity             = "system-environment"
+    password_secret_name = data.terraform_remote_state.core.outputs.acr_login_password
+    server               = data.terraform_remote_state.core.outputs.acr_login_server
+    username             = data.terraform_remote_state.core.outputs.acr_login_username
+  }
   ingress {
     allow_insecure_connections = false
     external_enabled           = true
@@ -31,6 +37,7 @@ resource "azurerm_container_app" "res-3" {
     min_replicas = 0
     container {
       cpu    = 1
+      args   = ["mlflow", "server", "--default-artifact-root", data.terraform_remote_state.core.outputs.artifact_root]
       image  = "${data.terraform_remote_state.core.outputs.acr_login_server}/${var.image_name}"
       memory = "2Gi"
       name   = "mlflow"

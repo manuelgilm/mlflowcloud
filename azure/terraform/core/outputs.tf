@@ -25,6 +25,17 @@ output "acr_login_server" {
   value       = azurerm_container_registry.res-1.login_server
   description = "Login server of the Azure Container Registry"
 }
+output "acr_login_username" {
+  value       = azurerm_container_registry.res-1.name
+  description = "Name to use to log the server"
+  sensitive   = true
+}
+
+output "acr_login_password" {
+  value       = azurerm_container_registry.res-1.admin_password
+  description = "Password used to log in"
+  sensitive   = true
+}
 
 output "container_app_env_id" {
   value = azurerm_container_app_environment.res-2.id
