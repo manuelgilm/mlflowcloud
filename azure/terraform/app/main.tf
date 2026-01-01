@@ -18,9 +18,7 @@ resource "azurerm_container_app" "res-3" {
   workload_profile_name        = "Consumption"
   registry {
     identity             = "system-environment"
-    password_secret_name = data.terraform_remote_state.core.outputs.acr_login_password
     server               = data.terraform_remote_state.core.outputs.acr_login_server
-    username             = data.terraform_remote_state.core.outputs.acr_login_username
   }
   ingress {
     allow_insecure_connections = false
