@@ -26,6 +26,9 @@ resource "azurerm_container_app" "res-3" {
   revision_mode                = "Single"
   tags                         = {}
   workload_profile_name        = "Consumption"
+  identity {
+    type = "SystemAssigned"
+  }
   registry {
     identity = "SystemAssigned"
     server   = data.terraform_remote_state.core.outputs.acr_login_server
