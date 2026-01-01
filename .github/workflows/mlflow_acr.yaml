@@ -1,26 +1,26 @@
 name: Create Custom MLflow Image
 env:
   IMAGE_NAME: "gilsamas/mlflowcloud"
-on: 
-  workflow_run:
-    workflows: ["Build Infra for MLflow on Azure"]
-    types:
-      - completed
-    branches:
-      - "master"
-  push:
-    branches: 
-      - "main"
-      - "master"
-      - "feature/adding_terraform_taskk"
-    paths:
-      - "docker/Dockerfile"
+# on: 
+  # workflow_run:
+  #   workflows: ["Build Infra for MLflow on Azure"]
+  #   types:
+  #     - completed
+  #   branches:
+  #     - "master"
+  # push:
+  #   branches: 
+  #     - "main"
+  #     - "master"
+  #     - "feature/adding_terraform_taskk"
+  #   paths:
+  #     - "docker/Dockerfile"
 
-  pull_request:
-    branches:
-      - "main"
-      - "master"
-  workflow_dispatch:
+  # pull_request:
+  #   branches:
+  #     - "main"
+  #     - "master"
+  # workflow_dispatch:
 
 jobs:   
   build_and_push_image:
@@ -41,3 +41,7 @@ jobs:
             az acr build \
               --registry ${{ vars.AZURE_ACR_NAME}} \
               --image ${{ env.IMAGE_NAME }}:${{ github.sha }} ./docker 
+
+      - name: Set output image name
+        id: set-output
+        run: echo "::set-output name=image::${{ env.IMAGE_NAME }}:${{ github.sha }}"
