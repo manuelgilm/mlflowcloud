@@ -23,6 +23,17 @@ resource "azurerm_subnet" "container_apps_subnet" {
   resource_group_name  = azurerm_resource_group.res-0.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.0.0/23"]
+
+  # Required so Container Apps Environment can attach to the subnet
+  delegation {
+    name = "containerapps-delegation"
+    service_delegation {
+      name = "Microsoft.App/environments"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/action"
+      ]
+    }
+  }
 }
 
 # Subnet for PostgreSQL private endpoint
