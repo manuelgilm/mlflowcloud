@@ -114,7 +114,7 @@ resource "azurerm_postgresql_flexible_server" "res-7" {
   delegated_subnet_id               = ""
   geo_redundant_backup_enabled      = false
   location                          = var.location
-  name                              = var.postgresql_server_name
+  name                              = var.postgresql_flexible_server_name
   point_in_time_restore_time_in_utc = ""
   private_dns_zone_id               = ""
   public_network_access_enabled     = true
