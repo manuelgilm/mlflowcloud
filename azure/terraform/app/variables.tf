@@ -18,3 +18,8 @@ variable "postgresql_admin_username" {
   description = "Default Admin Username"
   type        = string
 }
+
+variable "postgresql_flexible_server_name" {
+  description = "Name for the Postgresql Flexible Server"
+  type = string
+}
