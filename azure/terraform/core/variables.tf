@@ -35,12 +35,14 @@ variable "azure_artifacts_container_name" {
 variable "postgresql_admin_password" {
   description = "Admin Password for default user"
   type        = string
+  sensitive   = true
 }
 
 
 variable "postgresql_admin_username" {
   description = "Default Admin Username"
   type        = string
+  sensitive   = true
 }
 
 variable "tenant_id" {

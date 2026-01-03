@@ -102,7 +102,7 @@ resource "azurerm_storage_container" "res-6" {
   container_access_type = "private"
   metadata              = {}
   name                  = var.azure_artifacts_container_name
-  storage_account_name  = azurerm_storage_account.res-5.name
+  storage_account_id    = azurerm_storage_account.res-5.id
 }
 
 resource "azurerm_postgresql_flexible_server" "res-7" {
