@@ -52,8 +52,8 @@ jobs:
         env:
           TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
           TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
-          TF_VAR_postgresql_admin_password: ${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}
-          TF_VAR_postgresql_admin_username: ${{ secrets.POSTGRESQL_ADMIN_USERNAME }}
+          TF_VAR_postgresql_admin_password: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_PASSWORD }}
+          TF_VAR_postgresql_admin_username: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_USERNAME }}
           TF_VAR_postgresql_flexible_server_name: ${{ vars.AZURE_POSTGRESQL_FLEXIBLE_SERVER_NAME }}
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
@@ -69,8 +69,8 @@ jobs:
         env:
           TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
           TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
-          TF_VAR_postgresql_admin_password: ${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}
-          TF_VAR_postgresql_admin_username: ${{ secrets.POSTGRESQL_ADMIN_USERNAME }}
+          TF_VAR_postgresql_admin_password: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_PASSWORD }}
+          TF_VAR_postgresql_admin_username: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_USERNAME }}
           TF_VAR_postgresql_flexible_server_name: ${{ vars.AZURE_POSTGRESQL_FLEXIBLE_SERVER_NAME }}
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}          
           TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
@@ -150,8 +150,8 @@ jobs:
           TF_VAR_azure_container_app_name: ${{ vars.AZURE_CONTAINER_APP_NAME }}
           # TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
           # TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
-          TF_VAR_postgresql_admin_password: ${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}
-          TF_VAR_postgresql_admin_username: ${{ secrets.POSTGRESQL_ADMIN_USERNAME }}
+          TF_VAR_postgresql_admin_password: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_PASSWORD }}
+          TF_VAR_postgresql_admin_username: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_USERNAME }}
           TF_VAR_postgresql_flexible_server_name: ${{ vars.AZURE_POSTGRESQL_FLEXIBLE_SERVER_NAME }}
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           # TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
@@ -169,8 +169,8 @@ jobs:
           TF_VAR_azure_container_app_name: ${{ vars.AZURE_CONTAINER_APP_NAME }}
           # TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
           # TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
-          TF_VAR_postgresql_admin_password: ${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}
-          TF_VAR_postgresql_admin_username: ${{ secrets.POSTGRESQL_ADMIN_USERNAME }}
+          TF_VAR_postgresql_admin_password: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_PASSWORD }}
+          TF_VAR_postgresql_admin_username: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_USERNAME }}
           TF_VAR_postgresql_flexible_server_name: ${{ vars.AZURE_POSTGRESQL_FLEXIBLE_SERVER_NAME }}
           # TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}          
           # TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
