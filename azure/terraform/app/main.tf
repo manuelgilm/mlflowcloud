@@ -9,15 +9,7 @@ data "terraform_remote_state" "core" {
   }
 }
 
-data "terraform_remote_state" "app" {
-  backend = "azurerm"
-  config = {
-    resource_group_name  = "gilsamasstudyapitfstate"
-    storage_account_name = "gilsamastfstatestg"
-    container_name       = "mlflowcloudtfstate"
-    key                  = "terraform.app.tfstate"
-  }
-}
+
 
 resource "azurerm_container_app" "res-3" {
   container_app_environment_id = data.terraform_remote_state.core.outputs.container_app_env_id
@@ -74,4 +66,15 @@ resource "azurerm_container_app" "res-3" {
       }
     }
   }
+}
+
+resource "azurerm_role_assignment" "container_app_acr_pull" {
+  scope                = data.terraform_remote_state.core.outputs.acr_id
+  role_definition_name = "AcrPull"
+  principal_id         = azurerm_container_app.res-3.identity[0].principal_id
+}
+
+output "container_app_identity_principal_id" {
+  description = "The principal ID of the Container App's system-assigned managed identity"
+  value       = azurerm_container_app.res-3.identity[0].principal_id
 }
