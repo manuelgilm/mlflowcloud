@@ -81,6 +81,8 @@ jobs:
     needs: 
       - terraform_core
     runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.set-output.outputs.image }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -101,7 +103,7 @@ jobs:
 
       - name: Set output image name
         id: set-output
-        run: echo "::set-output name=image::${{ env.IMAGE_NAME }}:${{ github.sha }}"
+        run: echo "image=${{ env.IMAGE_NAME }}:${{ github.sha }}" >> $GITHUB_OUTPUT
 
   deploy_container_app:
     needs: 
@@ -144,7 +146,7 @@ jobs:
         working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
         run: terraform plan
         env:
-          TF_VAR_image_name: ${{ steps.build_and_push_image.outputs.image }}
+          TF_VAR_image_name: ${{ needs.build_and_push_image.outputs.image }}
           TF_VAR_azure_container_app_name: ${{ vars.AZURE_CONTAINER_APP_NAME }}
           # TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
           # TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
@@ -162,7 +164,7 @@ jobs:
         working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
         run: terraform apply -auto-approve
         env:
-          TF_VAR_image_name: ${{ steps.build_and_push_image.outputs.image }}
+          TF_VAR_image_name: ${{ needs.build_and_push_image.outputs.image }}
           TF_VAR_azure_container_app_name: ${{ vars.AZURE_CONTAINER_APP_NAME }}
           # TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
           # TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
