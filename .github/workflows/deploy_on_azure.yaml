@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - master
-      - feature/adding_terraform_taskk
+      - develop
     paths:
       - '.github/workflows/deploy_on_azure.yaml'
       - 'azure/**'
@@ -63,7 +63,7 @@ jobs:
           TF_VAR_azure_artifacts_container_name: ${{ vars.AZURE_ARTIFACTS_CONTAINER_NAME }}
           
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
         working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
         run: terraform apply -auto-approve
         env:
@@ -163,7 +163,7 @@ jobs:
           # TF_VAR_azure_artifacts_container_name: ${{ vars.AZURE_ARTIFACTS_CONTAINER_NAME }}
           
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
         working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
         run: terraform apply -auto-approve
         env:
