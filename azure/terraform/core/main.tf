@@ -67,7 +67,7 @@ resource "azurerm_container_app_environment" "res-2" {
   name                           = var.azure_container_app_env_name
   resource_group_name            = azurerm_resource_group.res-0.name
   infrastructure_subnet_id       = azurerm_subnet.container_apps_subnet.id
-  internal_load_balancer_enabled = false  # Set to false to allow public ingress for MLflow
+  internal_load_balancer_enabled = false # Set to false to allow public ingress for MLflow
   tags                           = {}
   workload_profile {
     maximum_count         = 0
