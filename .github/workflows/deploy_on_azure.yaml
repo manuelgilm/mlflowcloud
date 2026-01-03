@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - master
-      - feature/adding_terraform_taskk
+      - adding_networking
     paths:
       - '.github/workflows/deploy_on_azure.yaml'
       - 'azure/**'
