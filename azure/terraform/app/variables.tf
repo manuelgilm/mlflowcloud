@@ -21,5 +21,5 @@ variable "postgresql_admin_username" {
 
 variable "postgresql_flexible_server_name" {
   description = "Name for the Postgresql Flexible Server"
-  type = string
+  type        = string
 }

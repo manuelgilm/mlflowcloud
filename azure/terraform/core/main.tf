@@ -106,21 +106,21 @@ resource "azurerm_storage_container" "res-6" {
 }
 
 resource "azurerm_postgresql_flexible_server" "res-7" {
-  administrator_login          = var.postgresql_admin_username
-  administrator_password       = var.postgresql_admin_password
-  auto_grow_enabled            = false
-  backup_retention_days        = 7
-  geo_redundant_backup_enabled = false
-  location                     = var.location
-  name                         = var.postgresql_flexible_server_name
+  administrator_login           = var.postgresql_admin_username
+  administrator_password        = var.postgresql_admin_password
+  auto_grow_enabled             = false
+  backup_retention_days         = 7
+  geo_redundant_backup_enabled  = false
+  location                      = var.location
+  name                          = var.postgresql_flexible_server_name
   public_network_access_enabled = true
-  resource_group_name          = azurerm_resource_group.res-0.name
-  sku_name                     = "B_Standard_B2s"
-  storage_mb                   = 32768
-  storage_tier                 = "P4"
-  tags                         = {}
-  version                      = "17"
-  zone                         = "3"
+  resource_group_name           = azurerm_resource_group.res-0.name
+  sku_name                      = "B_Standard_B2s"
+  storage_mb                    = 32768
+  storage_tier                  = "P4"
+  tags                          = {}
+  version                       = "17"
+  zone                          = "3"
   authentication {
     active_directory_auth_enabled = true
     password_auth_enabled         = true
