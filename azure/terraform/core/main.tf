@@ -98,7 +98,6 @@ resource "azurerm_storage_account" "res-5" {
   }
 }
 
-
 resource "azurerm_storage_container" "res-6" {
   container_access_type = "private"
   metadata              = {}

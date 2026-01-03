@@ -40,3 +40,8 @@ output "acr_login_password" {
 output "container_app_env_id" {
   value = azurerm_container_app_environment.res-2.id
 }
+
+output "acr_id" {
+  value       = azurerm_container_registry.res-1.id
+  description = "Resource ID of the Azure Container Registry"
+}
