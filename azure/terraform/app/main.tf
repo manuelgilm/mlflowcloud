@@ -18,12 +18,14 @@ resource "azurerm_container_app" "res-3" {
   revision_mode                = "Single"
   tags                         = {}
   workload_profile_name        = "Consumption"
-  identity {
-    type = "SystemAssigned"
-  }
   registry {
-    identity = "SystemAssigned"
-    server   = data.terraform_remote_state.core.outputs.acr_login_server
+    server               = data.terraform_remote_state.core.outputs.acr_login_server
+    username             = data.terraform_remote_state.core.outputs.acr_login_username
+    password_secret_name = "acr-password"
+  }
+  secret {
+    name  = "acr-password"
+    value = data.terraform_remote_state.core.outputs.acr_login_password
   }
   ingress {
     allow_insecure_connections = false
@@ -68,13 +70,3 @@ resource "azurerm_container_app" "res-3" {
   }
 }
 
-resource "azurerm_role_assignment" "container_app_acr_pull" {
-  scope                = data.terraform_remote_state.core.outputs.acr_id
-  role_definition_name = "AcrPull"
-  principal_id         = azurerm_container_app.res-3.identity[0].principal_id
-}
-
-output "container_app_identity_principal_id" {
-  description = "The principal ID of the Container App's system-assigned managed identity"
-  value       = azurerm_container_app.res-3.identity[0].principal_id
-}
