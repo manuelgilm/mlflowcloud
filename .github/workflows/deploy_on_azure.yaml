@@ -19,7 +19,7 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      # TF_VERSION: 1.5.7
+      TF_VERSION: 1.5.7
       TERRAFORM_WORKING_DIR: "azure/terraform/core"
 
     steps:
@@ -150,17 +150,10 @@ jobs:
         env:
           TF_VAR_image_name: ${{ needs.build_and_push_image.outputs.image }}
           TF_VAR_azure_container_app_name: ${{ vars.AZURE_CONTAINER_APP_NAME }}
-          # TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
-          # TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
           TF_VAR_postgresql_admin_password: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_PASSWORD }}
           TF_VAR_postgresql_admin_username: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_USERNAME }}
           TF_VAR_postgresql_flexible_server_name: ${{ vars.AZURE_POSTGRESQL_FLEXIBLE_SERVER_NAME }}
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-          # TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
-          # TF_VAR_azure_analytics_ws_name: ${{ vars.AZURE_ANALYTICS_WS_NAME }}
-          # TF_VAR_azure_container_app_env_name: ${{ vars.AZURE_CONTAINER_APP_ENV_NAME }}
-          # TF_VAR_azure_storage_account_name: ${{ vars.AZURE_STORAGE_ACCOUNT_NAME }}
-          # TF_VAR_azure_artifacts_container_name: ${{ vars.AZURE_ARTIFACTS_CONTAINER_NAME }}
           
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
@@ -169,14 +162,6 @@ jobs:
         env:
           TF_VAR_image_name: ${{ needs.build_and_push_image.outputs.image }}
           TF_VAR_azure_container_app_name: ${{ vars.AZURE_CONTAINER_APP_NAME }}
-          # TF_VAR_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
-          # TF_VAR_location: ${{ vars.AZURE_RG_LOCATION }}
           TF_VAR_postgresql_admin_password: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_PASSWORD }}
           TF_VAR_postgresql_admin_username: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_USERNAME }}
           TF_VAR_postgresql_flexible_server_name: ${{ vars.AZURE_POSTGRESQL_FLEXIBLE_SERVER_NAME }}
-          # TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}          
-          # TF_VAR_acr_name: ${{ vars.AZURE_ACR_NAME }}
-          # TF_VAR_azure_analytics_ws_name: ${{ vars.AZURE_ANALYTICS_WS_NAME }}
-          # TF_VAR_azure_container_app_env_name: ${{ vars.AZURE_CONTAINER_APP_ENV_NAME }}
-          # TF_VAR_azure_storage_account_name: ${{ vars.AZURE_STORAGE_ACCOUNT_NAME }}
-          # TF_VAR_azure_artifacts_container_name: ${{ vars.AZURE_ARTIFACTS_CONTAINER_NAME }}
