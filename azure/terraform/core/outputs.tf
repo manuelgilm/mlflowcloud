@@ -45,3 +45,38 @@ output "acr_id" {
   value       = azurerm_container_registry.res-1.id
   description = "Resource ID of the Azure Container Registry"
 }
+
+output "vnet_id" {
+  value       = azurerm_virtual_network.vnet.id
+  description = "Resource ID of the Virtual Network"
+}
+
+output "vnet_name" {
+  value       = azurerm_virtual_network.vnet.name
+  description = "Name of the Virtual Network"
+}
+
+output "container_apps_subnet_id" {
+  value       = azurerm_subnet.container_apps_subnet.id
+  description = "Resource ID of the Container Apps subnet"
+}
+
+output "postgresql_subnet_id" {
+  value       = azurerm_subnet.postgresql_subnet.id
+  description = "Resource ID of the PostgreSQL subnet"
+}
+
+output "storage_subnet_id" {
+  value       = azurerm_subnet.storage_subnet.id
+  description = "Resource ID of the Storage subnet"
+}
+
+output "postgresql_private_endpoint_ip" {
+  value       = azurerm_private_endpoint.postgresql_endpoint.private_service_connection[0].private_ip_address
+  description = "Private IP address of the PostgreSQL private endpoint"
+}
+
+output "storage_private_endpoint_ip" {
+  value       = azurerm_private_endpoint.storage_blob_endpoint.private_service_connection[0].private_ip_address
+  description = "Private IP address of the Storage Blob private endpoint"
+}
