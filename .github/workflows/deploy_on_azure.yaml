@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - master
-      - adding_networking
+      - develop
     paths:
       - '.github/workflows/deploy_on_azure.yaml'
       - 'azure/**'
