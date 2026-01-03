@@ -104,3 +104,32 @@ resource "azurerm_storage_container" "res-6" {
   name                  = var.azure_artifacts_container_name
   storage_account_name  = azurerm_storage_account.res-5.name
 }
+
+resource "azurerm_postgresql_flexible_server" "res-7" {
+  administrator_login               = var.postgresql_admin_username
+  administrator_password            = var.postgresql_admin_password
+  administrator_password_wo_version = 0
+  auto_grow_enabled                 = false
+  backup_retention_days             = 7
+  delegated_subnet_id               = ""
+  geo_redundant_backup_enabled      = false
+  location                          = var.location
+  name                              = var.postgresql_server_name
+  point_in_time_restore_time_in_utc = ""
+  private_dns_zone_id               = ""
+  public_network_access_enabled     = true
+  replication_role                  = ""
+  resource_group_name               = var.resource_group_name
+  sku_name                          = "B_Standard_B2s"
+  source_server_id                  = ""
+  storage_mb                        = 32768
+  storage_tier                      = "P4"
+  tags                              = {}
+  version                           = "17"
+  zone                              = "3"
+  authentication {
+    active_directory_auth_enabled = true
+    password_auth_enabled         = true
+    tenant_id                     = var.tenant_id
+  }
+}

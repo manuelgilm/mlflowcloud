@@ -27,6 +27,10 @@ resource "azurerm_container_app" "res-3" {
     name  = "acr-password"
     value = data.terraform_remote_state.core.outputs.acr_login_password
   }
+  secret {
+    name  = "backend-store-uri"
+    value = "postgresql://${var.postgresql_admin_username}:${var.postgresql_admin_password}@${var.postgresql_flexible_server_name}.postgres.database.azure.com:5432/postgres"
+  }
   ingress {
     allow_insecure_connections = false
     external_enabled           = true
@@ -65,6 +69,10 @@ resource "azurerm_container_app" "res-3" {
       env {
         name  = "AZURE_STORAGE_ACCESS_KEY"
         value = data.terraform_remote_state.core.outputs.primary_access_key
+      }
+      env {
+        name   = "MLFLOW_BACKEND_STORE_URI"
+        secret = "backend-store-uri"
       }
     }
   }

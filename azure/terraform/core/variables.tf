@@ -47,3 +47,8 @@ variable "tenant_id" {
   description = "tenant_id"
   type        = string
 }
+
+variable "postgresql_flexible_server_name" {
+  description = "Name for the Postgresql Flexible Server"
+  type        = string
+}
