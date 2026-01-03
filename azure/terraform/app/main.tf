@@ -71,8 +71,8 @@ resource "azurerm_container_app" "res-3" {
         value = data.terraform_remote_state.core.outputs.primary_access_key
       }
       env {
-        name   = "MLFLOW_BACKEND_STORE_URI"
-        secret = "backend-store-uri"
+        name        = "MLFLOW_BACKEND_STORE_URI"
+        secret_name = "backend-store-uri"
       }
     }
   }
