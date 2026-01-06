@@ -102,19 +102,16 @@ resource "azurerm_monitor_diagnostic_setting" "container_app_diag" {
   target_resource_id         = azurerm_container_app.mlflow_app.id
   log_analytics_workspace_id = data.terraform_remote_state.core.outputs.log_analytics_workspace_id
 
-  log {
+  enabled_log {
     category = "ContainerAppConsoleLogs"
-    enabled  = true
   }
 
-  log {
+  enabled_log {
     category = "ContainerAppSystemLogs"
-    enabled  = true
   }
 
-  log {
+  enabled_log {
     category = "KubePodInventory"
-    enabled  = true
   }
 
   metric {

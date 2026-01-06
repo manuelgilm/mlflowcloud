@@ -78,14 +78,12 @@ resource "azurerm_monitor_diagnostic_setting" "acr_diag" {
   target_resource_id         = azurerm_container_registry.acr.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics.id
 
-  log {
+  enabled_log {
     category = "ContainerRegistryLoginEvents"
-    enabled  = true
   }
 
-  log {
+  enabled_log {
     category = "ContainerRegistryRepositoryEvents"
-    enabled  = true
   }
 
   metric {
@@ -116,19 +114,16 @@ resource "azurerm_monitor_diagnostic_setting" "containerapps_env_diag" {
   target_resource_id         = azurerm_container_app_environment.container_app_env.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics.id
 
-  log {
+  enabled_log {
     category = "IngressLogs"
-    enabled  = true
   }
 
-  log {
+  enabled_log {
     category = "ControlPlaneLogs"
-    enabled  = true
   }
 
-  log {
+  enabled_log {
     category = "SystemLogs"
-    enabled  = true
   }
 
   metric {
@@ -202,19 +197,16 @@ resource "azurerm_monitor_diagnostic_setting" "storage_diag" {
   target_resource_id         = azurerm_storage_account.artifact_storage.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics.id
 
-  log {
+  enabled_log {
     category = "StorageRead"
-    enabled  = true
   }
 
-  log {
+  enabled_log {
     category = "StorageWrite"
-    enabled  = true
   }
 
-  log {
+  enabled_log {
     category = "StorageDelete"
-    enabled  = true
   }
 
   metric {
@@ -259,19 +251,16 @@ resource "azurerm_monitor_diagnostic_setting" "postgres_diag" {
   target_resource_id         = azurerm_postgresql_flexible_server.postgres.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics.id
 
-  log {
+  enabled_log {
     category = "PostgreSQLLogs"
-    enabled  = true
   }
 
-  log {
+  enabled_log {
     category = "QueryStoreRuntimeStatistics"
-    enabled  = true
   }
 
-  log {
+  enabled_log {
     category = "QueryStoreWaitStatistics"
-    enabled  = true
   }
 
   metric {
