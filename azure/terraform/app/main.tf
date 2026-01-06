@@ -75,11 +75,11 @@ resource "azurerm_container_app" "mlflow_app" {
       }
 
       liveness_probe {
-        transport        = "HTTP"
-        path             = "/health"
-        port             = 5000
-        interval_seconds = 30
-        timeout          = 5
+        transport         = "HTTP"
+        path              = "/health"
+        port              = 5000
+        interval_seconds  = 30
+        timeout           = 5
         failure_threshold = 3
       }
 
