@@ -86,9 +86,8 @@ resource "azurerm_monitor_diagnostic_setting" "acr_diag" {
     category = "ContainerRegistryRepositoryEvents"
   }
 
-  metric {
+  enabled_metric {
     category = "AllMetrics"
-    enabled  = true
   }
 }
 
@@ -115,16 +114,11 @@ resource "azurerm_monitor_diagnostic_setting" "containerapps_env_diag" {
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics.id
 
   enabled_log {
-    category = "ControlPlaneLogs"
-  }
-
-  enabled_log {
     category = "SystemLogs"
   }
 
-  metric {
+  enabled_metric {
     category = "AllMetrics"
-    enabled  = true
   }
 }
 
@@ -193,9 +187,8 @@ resource "azurerm_monitor_diagnostic_setting" "storage_diag" {
   target_resource_id         = azurerm_storage_account.artifact_storage.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics.id
 
-  metric {
+  enabled_metric {
     category = "AllMetrics"
-    enabled  = true
   }
 }
 
@@ -239,9 +232,8 @@ resource "azurerm_monitor_diagnostic_setting" "postgres_diag" {
     category = "PostgreSQLLogs"
   }
 
-  metric {
+  enabled_metric {
     category = "AllMetrics"
-    enabled  = true
   }
 }
 

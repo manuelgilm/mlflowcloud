@@ -114,9 +114,8 @@ resource "azurerm_monitor_diagnostic_setting" "container_app_diag" {
     category = "KubePodInventory"
   }
 
-  metric {
+  enabled_metric {
     category = "AllMetrics"
-    enabled  = true
   }
 }
 
