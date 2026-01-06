@@ -87,7 +87,7 @@ jobs:
       image: ${{ steps.set-output.outputs.image }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Azure Login
         uses: azure/login@v2
@@ -120,8 +120,6 @@ jobs:
       TERRAFORM_WORKING_DIR: "azure/terraform/app"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Checkout repository
         uses: actions/checkout@v5
 
       - name: Setup Terraform
@@ -153,7 +151,6 @@ jobs:
           TF_VAR_postgresql_admin_password: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_PASSWORD }}
           TF_VAR_postgresql_admin_username: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_USERNAME }}
           TF_VAR_postgresql_flexible_server_name: ${{ vars.AZURE_POSTGRESQL_FLEXIBLE_SERVER_NAME }}
-          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'

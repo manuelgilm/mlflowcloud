@@ -74,6 +74,25 @@ resource "azurerm_container_app" "res-3" {
         name        = "MLFLOW_BACKEND_STORE_URI"
         secret_name = "backend-store-uri"
       }
+
+      liveness_probe {
+        transport        = "HTTP"
+        path             = "/health"
+        port             = 5000
+        interval_seconds = 30
+        timeout          = 5
+        failure_threshold = 3
+      }
+
+      readiness_probe {
+        transport         = "HTTP"
+        path              = "/health"
+        port              = 5000
+        interval_seconds  = 10
+        timeout           = 5
+        failure_threshold = 3
+        success_threshold = 1
+      }
     }
   }
 }
