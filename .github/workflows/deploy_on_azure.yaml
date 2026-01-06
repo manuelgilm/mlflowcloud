@@ -87,7 +87,7 @@ jobs:
       image: ${{ steps.set-output.outputs.image }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Azure Login
         uses: azure/login@v2
