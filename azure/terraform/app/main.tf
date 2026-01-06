@@ -10,11 +10,6 @@ data "terraform_remote_state" "core" {
 }
 
 
-moved {
-  from = azurerm_container_app.res-3
-  to   = azurerm_container_app.mlflow_app
-}
-
 resource "azurerm_container_app" "mlflow_app" {
   container_app_environment_id = data.terraform_remote_state.core.outputs.container_app_env_id
   name                         = var.azure_container_app_name

@@ -1,38 +1,3 @@
-moved {
-  from = azurerm_resource_group.res-0
-  to   = azurerm_resource_group.rg
-}
-
-moved {
-  from = azurerm_container_registry.res-1
-  to   = azurerm_container_registry.acr
-}
-
-moved {
-  from = azurerm_container_app_environment.res-2
-  to   = azurerm_container_app_environment.container_app_env
-}
-
-moved {
-  from = azurerm_log_analytics_workspace.res-4
-  to   = azurerm_log_analytics_workspace.log_analytics
-}
-
-moved {
-  from = azurerm_storage_account.res-5
-  to   = azurerm_storage_account.artifact_storage
-}
-
-moved {
-  from = azurerm_storage_container.res-6
-  to   = azurerm_storage_container.artifact_container
-}
-
-moved {
-  from = azurerm_postgresql_flexible_server.res-7
-  to   = azurerm_postgresql_flexible_server.postgres
-}
-
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
