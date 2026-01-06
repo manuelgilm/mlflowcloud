@@ -107,21 +107,6 @@ resource "azurerm_container_app_environment" "container_app_env" {
   }
 }
 
-# Capture Container Apps Environment control-plane logs and metrics
-resource "azurerm_monitor_diagnostic_setting" "containerapps_env_diag" {
-  name                       = "containerapps-env-to-loganalytics"
-  target_resource_id         = azurerm_container_app_environment.container_app_env.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics.id
-
-  enabled_log {
-    category = "SystemLogs"
-  }
-
-  enabled_metric {
-    category = "AllMetrics"
-  }
-}
-
 resource "azurerm_log_analytics_workspace" "log_analytics" {
   allow_resource_only_permissions         = true
   cmk_for_query_forced                    = false
