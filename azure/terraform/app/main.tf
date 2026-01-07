@@ -10,8 +10,7 @@ data "terraform_remote_state" "core" {
 }
 
 
-
-resource "azurerm_container_app" "res-3" {
+resource "azurerm_container_app" "mlflow_app" {
   container_app_environment_id = data.terraform_remote_state.core.outputs.container_app_env_id
   name                         = var.azure_container_app_name
   resource_group_name          = data.terraform_remote_state.core.outputs.resource_group_name
@@ -76,24 +75,35 @@ resource "azurerm_container_app" "res-3" {
       }
 
       liveness_probe {
-        transport        = "HTTP"
-        path             = "/health"
-        port             = 5000
-        interval_seconds = 30
-        timeout          = 5
-        failure_threshold = 3
+        transport               = "HTTP"
+        path                    = "/health"
+        port                    = 5000
+        interval_seconds        = 30
+        timeout                 = 5
+        failure_count_threshold = 3
       }
 
       readiness_probe {
-        transport         = "HTTP"
-        path              = "/health"
-        port              = 5000
-        interval_seconds  = 10
-        timeout           = 5
-        failure_threshold = 3
-        success_threshold = 1
+        transport               = "HTTP"
+        path                    = "/health"
+        port                    = 5000
+        interval_seconds        = 10
+        timeout                 = 5
+        failure_count_threshold = 3
+        success_count_threshold = 1
       }
     }
+  }
+}
+
+# Send app metrics to Log Analytics (logs currently unsupported in this region/SKU)
+resource "azurerm_monitor_diagnostic_setting" "container_app_diag" {
+  name                       = "container-app-to-loganalytics"
+  target_resource_id         = azurerm_container_app.mlflow_app.id
+  log_analytics_workspace_id = data.terraform_remote_state.core.outputs.log_analytics_workspace_id
+
+  enabled_metric {
+    category = "AllMetrics"
   }
 }
 

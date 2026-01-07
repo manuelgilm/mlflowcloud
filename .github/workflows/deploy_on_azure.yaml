@@ -6,6 +6,7 @@ on:
     branches:
       - master
       - develop
+      - log_analytics
     paths:
       - '.github/workflows/deploy_on_azure.yaml'
       - 'azure/**'
@@ -63,7 +64,7 @@ jobs:
           TF_VAR_azure_artifacts_container_name: ${{ vars.AZURE_ARTIFACTS_CONTAINER_NAME }}
           
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/log_analytics'
         working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
         run: terraform apply -auto-approve
         env:
@@ -153,7 +154,7 @@ jobs:
           TF_VAR_postgresql_flexible_server_name: ${{ vars.AZURE_POSTGRESQL_FLEXIBLE_SERVER_NAME }}
           
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/log_analytics'
         working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
         run: terraform apply -auto-approve
         env:
