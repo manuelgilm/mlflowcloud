@@ -96,23 +96,11 @@ resource "azurerm_container_app" "mlflow_app" {
   }
 }
 
-# Send app logs/metrics to Log Analytics
+# Send app metrics to Log Analytics (logs currently unsupported in this region/SKU)
 resource "azurerm_monitor_diagnostic_setting" "container_app_diag" {
   name                       = "container-app-to-loganalytics"
   target_resource_id         = azurerm_container_app.mlflow_app.id
   log_analytics_workspace_id = data.terraform_remote_state.core.outputs.log_analytics_workspace_id
-
-  enabled_log {
-    category = "ContainerAppConsoleLogs"
-  }
-
-  enabled_log {
-    category = "ContainerAppSystemLogs"
-  }
-
-  enabled_log {
-    category = "KubePodInventory"
-  }
 
   enabled_metric {
     category = "AllMetrics"
