@@ -54,3 +54,8 @@ variable "postgresql_flexible_server_name" {
   description = "Name for the Postgresql Flexible Server"
   type        = string
 }
+
+variable "azure_keyvault_name" {
+  description = "Name for the Azure Key Vault"
+  type        = string
+}

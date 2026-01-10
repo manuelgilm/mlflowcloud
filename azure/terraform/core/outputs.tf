@@ -86,3 +86,14 @@ output "log_analytics_workspace_id" {
   description = "ID of the Log Analytics Workspace for diagnostics"
   value       = azurerm_log_analytics_workspace.log_analytics.id
 }
+
+output "key_vault_id" {
+  description = "ID of the Key Vault for storing secrets"
+  value       = azurerm_key_vault.kv.id
+}
+
+output "key_vault_uri" {
+  description = "URI of the Key Vault"
+  value       = azurerm_key_vault.kv.vault_uri
+  sensitive   = true
+}

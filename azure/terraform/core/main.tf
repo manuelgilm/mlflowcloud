@@ -2,7 +2,9 @@ resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
   tags = {
-    "environment" = "dev"
+    "environment" = "demo"
+    "application" = "mlflow"
+    "managed_by"  = "terraform"
   }
 }
 
@@ -13,7 +15,8 @@ resource "azurerm_virtual_network" "vnet" {
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
   tags = {
-    "environment" = "dev"
+    "environment" = "demo"
+    "application" = "mlflow"
   }
 }
 
@@ -52,6 +55,122 @@ resource "azurerm_subnet" "storage_subnet" {
   address_prefixes     = ["10.0.3.0/24"]
 }
 
+# Network Security Group for Container Apps
+resource "azurerm_network_security_group" "container_apps_nsg" {
+  name                = "${var.resource_group_name}-container-apps-nsg"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  tags = {
+    "environment" = "dev"
+  }
+
+  security_rule {
+    name                       = "AllowHTTPSInbound"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "443"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "AllowHTTPInbound"
+    priority                   = 101
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "DenyAllInbound"
+    priority                   = 200
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "AllowAllOutbound"
+    priority                   = 100
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+# Associate NSG with Container Apps Subnet
+resource "azurerm_subnet_network_security_group_association" "container_apps_nsg_assoc" {
+  subnet_id                 = azurerm_subnet.container_apps_subnet.id
+  network_security_group_id = azurerm_network_security_group.container_apps_nsg.id
+}
+
+# Network Security Group for PostgreSQL
+resource "azurerm_network_security_group" "postgresql_nsg" {
+  name                = "${var.resource_group_name}-postgresql-nsg"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  tags = {
+    "environment" = "dev"
+  }
+
+  security_rule {
+    name                       = "AllowPostgreSQLFromContainerApps"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "5432"
+    source_address_prefix      = "10.0.0.0/23"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "DenyAllInbound"
+    priority                   = 200
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "AllowAllOutbound"
+    priority                   = 100
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+# Associate NSG with PostgreSQL Subnet
+resource "azurerm_subnet_network_security_group_association" "postgresql_nsg_assoc" {
+  subnet_id                 = azurerm_subnet.postgresql_subnet.id
+  network_security_group_id = azurerm_network_security_group.postgresql_nsg.id
+}
+
 resource "azurerm_container_registry" "acr" {
   admin_enabled                 = true
   anonymous_pull_enabled        = false
@@ -62,14 +181,17 @@ resource "azurerm_container_registry" "acr" {
   name                          = var.acr_name
   network_rule_bypass_option    = "AzureServices"
   network_rule_set              = []
-  public_network_access_enabled = true
+  public_network_access_enabled = false
   quarantine_policy_enabled     = false
   resource_group_name           = azurerm_resource_group.rg.name
   retention_policy_in_days      = 0
   sku                           = "Basic"
-  tags                          = {}
-  trust_policy_enabled          = false
-  zone_redundancy_enabled       = false
+  tags = {
+    "environment" = "demo"
+    "application" = "mlflow"
+  }
+  trust_policy_enabled    = false
+  zone_redundancy_enabled = false
 }
 
 # Send ACR auth/repo events and metrics to Log Analytics
@@ -98,7 +220,10 @@ resource "azurerm_container_app_environment" "container_app_env" {
   resource_group_name            = azurerm_resource_group.rg.name
   infrastructure_subnet_id       = azurerm_subnet.container_apps_subnet.id
   internal_load_balancer_enabled = false # Set to false to allow public ingress for MLflow
-  tags                           = {}
+  tags = {
+    "environment" = "demo"
+    "application" = "mlflow"
+  }
   workload_profile {
     maximum_count         = 0
     minimum_count         = 0
@@ -119,7 +244,10 @@ resource "azurerm_log_analytics_workspace" "log_analytics" {
   resource_group_name                     = azurerm_resource_group.rg.name
   retention_in_days                       = 30
   sku                                     = "PerGB2018"
-  tags                                    = {}
+  tags = {
+    "environment" = "demo"
+    "application" = "mlflow"
+  }
 }
 
 resource "azurerm_storage_account" "artifact_storage" {
@@ -146,7 +274,10 @@ resource "azurerm_storage_account" "artifact_storage" {
   sftp_enabled                      = false
   shared_access_key_enabled         = true
   table_encryption_key_type         = "Service"
-  tags                              = {}
+  tags = {
+    "environment" = "demo"
+    "application" = "mlflow"
+  }
   blob_properties {
     change_feed_enabled      = false
     last_access_time_enabled = false
@@ -187,7 +318,7 @@ resource "azurerm_storage_container" "artifact_container" {
 resource "azurerm_postgresql_flexible_server" "postgres" {
   administrator_login           = var.postgresql_admin_username
   administrator_password        = var.postgresql_admin_password
-  auto_grow_enabled             = false
+  auto_grow_enabled             = true
   backup_retention_days         = 7
   geo_redundant_backup_enabled  = false
   location                      = var.location
@@ -197,9 +328,12 @@ resource "azurerm_postgresql_flexible_server" "postgres" {
   sku_name                      = "B_Standard_B2s"
   storage_mb                    = 32768
   storage_tier                  = "P4"
-  tags                          = {}
-  version                       = "17"
-  zone                          = "3"
+  tags = {
+    "environment" = "demo"
+    "application" = "mlflow"
+  }
+  version = "17"
+  zone    = "3"
   authentication {
     active_directory_auth_enabled = true
     password_auth_enabled         = true
@@ -306,4 +440,48 @@ resource "azurerm_private_endpoint" "storage_blob_endpoint" {
     name                 = "storage-blob-dns-zone-group"
     private_dns_zone_ids = [azurerm_private_dns_zone.storage_blob_dns.id]
   }
+}
+
+# Azure Key Vault for storing secrets
+resource "azurerm_key_vault" "kv" {
+  name                            = var.azure_keyvault_name
+  location                        = var.location
+  resource_group_name             = azurerm_resource_group.rg.name
+  tenant_id                       = var.tenant_id
+  sku_name                        = "standard"
+  soft_delete_retention_days      = 7
+  purge_protection_enabled        = false
+  enabled_for_deployment          = true
+  enabled_for_disk_encryption     = false
+  enabled_for_template_deployment = true
+  enable_rbac_authorization       = true
+  network_acls {
+    bypass         = "AzureServices"
+    default_action = "Deny"
+  }
+  tags = {
+    "environment" = "demo"
+    "application" = "mlflow"
+  }
+}
+
+# Store PostgreSQL password in Key Vault
+resource "azurerm_key_vault_secret" "postgres_password" {
+  name         = "postgres-admin-password"
+  value        = var.postgresql_admin_password
+  key_vault_id = azurerm_key_vault.kv.id
+}
+
+# Store PostgreSQL username in Key Vault
+resource "azurerm_key_vault_secret" "postgres_username" {
+  name         = "postgres-admin-username"
+  value        = var.postgresql_admin_username
+  key_vault_id = azurerm_key_vault.kv.id
+}
+
+# Store ACR password in Key Vault
+resource "azurerm_key_vault_secret" "acr_password" {
+  name         = "acr-admin-password"
+  value        = azurerm_container_registry.acr.admin_password
+  key_vault_id = azurerm_key_vault.kv.id
 }
