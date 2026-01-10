@@ -181,7 +181,7 @@ resource "azurerm_container_registry" "acr" {
   name                          = var.acr_name
   network_rule_bypass_option    = "AzureServices"
   network_rule_set              = []
-  public_network_access_enabled = false
+  public_network_access_enabled = true
   quarantine_policy_enabled     = false
   resource_group_name           = azurerm_resource_group.rg.name
   retention_policy_in_days      = 0
@@ -297,16 +297,17 @@ resource "azurerm_storage_account" "artifact_storage" {
   }
 }
 
-# Route storage access logs and metrics to Log Analytics
-resource "azurerm_monitor_diagnostic_setting" "storage_diag" {
-  name                       = "storage-to-loganalytics"
-  target_resource_id         = azurerm_storage_account.artifact_storage.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics.id
-
-  enabled_metric {
-    category = "AllMetrics"
-  }
-}
+# NOTE: Diagnostic settings already exist in Azure - managed outside Terraform
+# Uncomment below if importing existing resources into state
+# resource "azurerm_monitor_diagnostic_setting" "storage_diag" {
+#   name                       = "storage-to-loganalytics"
+#   target_resource_id         = azurerm_storage_account.artifact_storage.id
+#   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics.id
+#
+#   enabled_metric {
+#     category = "AllMetrics"
+#   }
+# }
 
 resource "azurerm_storage_container" "artifact_container" {
   container_access_type = "private"
@@ -341,20 +342,21 @@ resource "azurerm_postgresql_flexible_server" "postgres" {
   }
 }
 
-# Emit PostgreSQL logs and metrics to Log Analytics
-resource "azurerm_monitor_diagnostic_setting" "postgres_diag" {
-  name                       = "postgres-to-loganalytics"
-  target_resource_id         = azurerm_postgresql_flexible_server.postgres.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics.id
-
-  enabled_log {
-    category = "PostgreSQLLogs"
-  }
-
-  enabled_metric {
-    category = "AllMetrics"
-  }
-}
+# NOTE: Diagnostic settings already exist in Azure - managed outside Terraform
+# Uncomment below if importing existing resources into state
+# resource "azurerm_monitor_diagnostic_setting" "postgres_diag" {
+#   name                       = "postgres-to-loganalytics"
+#   target_resource_id         = azurerm_postgresql_flexible_server.postgres.id
+#   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics.id
+#
+#   enabled_log {
+#     category = "PostgreSQLLogs"
+#   }
+#
+#   enabled_metric {
+#     category = "AllMetrics"
+#   }
+# }
 
 # Private DNS Zone for PostgreSQL
 resource "azurerm_private_dns_zone" "postgresql_dns" {
@@ -454,7 +456,7 @@ resource "azurerm_key_vault" "kv" {
   enabled_for_deployment          = true
   enabled_for_disk_encryption     = false
   enabled_for_template_deployment = true
-  enable_rbac_authorization       = true
+  enable_rbac_authorization       = false
   network_acls {
     bypass         = "AzureServices"
     default_action = "Deny"
