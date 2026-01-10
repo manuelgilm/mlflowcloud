@@ -42,7 +42,7 @@ resource "azurerm_container_app" "mlflow_app" {
   }
   template {
     max_replicas = 10
-    min_replicas = 0
+    min_replicas = 1
     container {
       cpu    = 1
       args   = ["mlflow", "server", "--default-artifact-root", data.terraform_remote_state.core.outputs.artifact_root]
@@ -59,7 +59,7 @@ resource "azurerm_container_app" "mlflow_app" {
       }
       env {
         name  = "MLFLOW_SERVER_ALLOWED_HOSTS"
-        value = "*"
+        value = var.mlflow_allowed_hosts
       }
       env {
         name  = "AZURE_STORAGE_CONNECTION_STRING"
