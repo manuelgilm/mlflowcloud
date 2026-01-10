@@ -61,7 +61,8 @@ jobs:
           TF_VAR_azure_container_app_env_name: ${{ vars.AZURE_CONTAINER_APP_ENV_NAME }}
           TF_VAR_azure_storage_account_name: ${{ vars.AZURE_STORAGE_ACCOUNT_NAME }}
           TF_VAR_azure_artifacts_container_name: ${{ vars.AZURE_ARTIFACTS_CONTAINER_NAME }}
-          
+          TF_VAR_azure_keyvault_name: ${{ vars.AZURE_KEYVAULT_NAME }}
+      
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/log_analytics'
         working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
@@ -78,6 +79,7 @@ jobs:
           TF_VAR_azure_container_app_env_name: ${{ vars.AZURE_CONTAINER_APP_ENV_NAME }}
           TF_VAR_azure_storage_account_name: ${{ vars.AZURE_STORAGE_ACCOUNT_NAME }}
           TF_VAR_azure_artifacts_container_name: ${{ vars.AZURE_ARTIFACTS_CONTAINER_NAME }}
+          TF_VAR_azure_keyvault_name: ${{ vars.AZURE_KEYVAULT_NAME }}
   
   build_and_push_image:
     needs: 
@@ -151,6 +153,7 @@ jobs:
           TF_VAR_postgresql_admin_password: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_PASSWORD }}
           TF_VAR_postgresql_admin_username: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_USERNAME }}
           TF_VAR_postgresql_flexible_server_name: ${{ vars.AZURE_POSTGRESQL_FLEXIBLE_SERVER_NAME }}
+          TF_VAR_mlflow_allowed_hosts: ${{ vars.MLFLOW_ALLOWED_HOSTS }}
           
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/log_analytics'
@@ -162,3 +165,4 @@ jobs:
           TF_VAR_postgresql_admin_password: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_PASSWORD }}
           TF_VAR_postgresql_admin_username: ${{ secrets.AZ_POSTGRESQL_DB_ADMIN_USERNAME }}
           TF_VAR_postgresql_flexible_server_name: ${{ vars.AZURE_POSTGRESQL_FLEXIBLE_SERVER_NAME }}
+          TF_VAR_mlflow_allowed_hosts: ${{ vars.MLFLOW_ALLOWED_HOSTS }}
