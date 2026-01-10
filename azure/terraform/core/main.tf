@@ -446,10 +446,10 @@ resource "azurerm_key_vault" "kv" {
   enabled_for_deployment          = true
   enabled_for_disk_encryption     = false
   enabled_for_template_deployment = true
-  rbac_authorization_enabled       = false
+  rbac_authorization_enabled      = false
   network_acls {
     bypass         = "AzureServices"
-    default_action = "Allow"  # Allow for demo - GitHub Actions needs access from dynamic IPs
+    default_action = "Allow" # Allow for demo - GitHub Actions needs access from dynamic IPs
   }
   tags = {
     "environment" = "demo"
