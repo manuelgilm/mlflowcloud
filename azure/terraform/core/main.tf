@@ -1,3 +1,9 @@
+data "azurerm_client_config" "current" {}
+
+locals {
+  tenant_id_effective = coalesce(var.tenant_id, data.azurerm_client_config.current.tenant_id)
+}
+
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
@@ -342,22 +348,6 @@ resource "azurerm_postgresql_flexible_server" "postgres" {
   }
 }
 
-# NOTE: Diagnostic settings already exist in Azure - managed outside Terraform
-# Uncomment below if importing existing resources into state
-# resource "azurerm_monitor_diagnostic_setting" "postgres_diag" {
-#   name                       = "postgres-to-loganalytics"
-#   target_resource_id         = azurerm_postgresql_flexible_server.postgres.id
-#   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics.id
-#
-#   enabled_log {
-#     category = "PostgreSQLLogs"
-#   }
-#
-#   enabled_metric {
-#     category = "AllMetrics"
-#   }
-# }
-
 # Private DNS Zone for PostgreSQL
 resource "azurerm_private_dns_zone" "postgresql_dns" {
   name                = "privatelink.postgres.database.azure.com"
@@ -456,15 +446,29 @@ resource "azurerm_key_vault" "kv" {
   enabled_for_deployment          = true
   enabled_for_disk_encryption     = false
   enabled_for_template_deployment = true
-  enable_rbac_authorization       = false
+  rbac_authorization_enabled       = false
   network_acls {
     bypass         = "AzureServices"
-    default_action = "Deny"
+    default_action = "Allow"  # Allow for demo - GitHub Actions needs access from dynamic IPs
   }
   tags = {
     "environment" = "demo"
     "application" = "mlflow"
   }
+}
+
+# Grant the current caller rights to manage secrets in this vault
+resource "azurerm_key_vault_access_policy" "current" {
+  key_vault_id = azurerm_key_vault.kv.id
+  tenant_id    = local.tenant_id_effective
+  object_id    = data.azurerm_client_config.current.object_id
+
+  secret_permissions = [
+    "Get",
+    "List",
+    "Set",
+    "Delete"
+  ]
 }
 
 # Store PostgreSQL password in Key Vault
