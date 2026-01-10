@@ -23,3 +23,9 @@ variable "postgresql_flexible_server_name" {
   description = "Name for the Postgresql Flexible Server"
   type        = string
 }
+
+variable "mlflow_allowed_hosts" {
+  description = "Allowed hosts for MLflow server (comma-separated or '*' for all)"
+  type        = string
+  default     = "*"
+}
