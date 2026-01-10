@@ -64,7 +64,7 @@ jobs:
           TF_VAR_azure_keyvault_name: ${{ vars.AZURE_KEYVAULT_NAME }}
       
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/log_analytics'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
         working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
         run: terraform apply -auto-approve
         env:
@@ -156,7 +156,7 @@ jobs:
           TF_VAR_mlflow_allowed_hosts: ${{ vars.MLFLOW_ALLOWED_HOSTS }}
           
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/log_analytics'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
         working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
         run: terraform apply -auto-approve
         env:
